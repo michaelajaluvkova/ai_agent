@@ -3,8 +3,10 @@ from dotenv import load_dotenv
 from google import genai
 import sys
 from google.genai import types
+from functions.get_files_info import *
 
 def main():
+
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
 
@@ -38,5 +40,5 @@ def main():
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
-if __name__ == "__main__":
-    main()
+#main()
+print(get_files_info("calculator"))
