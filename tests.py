@@ -1,7 +1,20 @@
 from functions.get_files_info import *
+from functions.get_file_content import *
+
+working_dir = "calculator"
 
 def main():
-    working_dir = "calculator"
+    pass
+
+def test_get_content():
+    #print(get_file_content(working_dir, "lorem.txt"))
+    print(get_file_content(working_dir, "main.py"))
+    print(get_file_content(working_dir, "pkg/calculator.py"))
+    print(get_file_content(working_dir, "pkg/nonexistent.py"))
+    print(get_file_content(working_dir, "/bin/cat"))
+
+
+def test_get_info():
     root_contents = get_files_info(working_dir, ".")
     print(root_contents)
 
@@ -13,4 +26,5 @@ def main():
 
     dot_contents = get_files_info(working_dir, "../")
     print(dot_contents)
+
 main()
