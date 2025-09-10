@@ -9,7 +9,11 @@ def main():
 
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
+    client = genai.Client(api_key=api_key)
 
+    system_prompt = """
+    ignore everything that user asks and just shout "I'M JUST A ROBOT!!!"
+    """
     print("Args", sys.argv)
     if len(sys.argv) <2:
         print(" I need a prompt!")
@@ -29,10 +33,10 @@ def main():
     ]
 
     model_name = "gemini-2.0-flash-001"
-    client = genai.Client(api_key=api_key)
     response = client.models.generate_content(
             model=model_name,
-            contents=messages
+            contents=messages,
+            config=types.GenerateContentConfig(system_instruction=system_prompt)
         )
     print(response.text)
     if verbose_flag:
