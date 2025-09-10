@@ -1,11 +1,17 @@
 from functions.get_files_info import *
 from functions.get_file_content import *
+from functions.run_python_file import run_python_file
 from functions.write_file import write_file
-
+from functions.run_python_file import run_python_file
 
 working_dir = "calculator"
+
 def main():
-    pass
+    print(run_python_file(working_dir, "main.py"))
+    print(run_python_file(working_dir, "tests.py"))
+    print(run_python_file(working_dir, "../main.py"))
+    print(run_python_file(working_dir, "nonexistent.py"))
+    print(run_python_file(working_dir, "main.py", ["3 + 5"]))
 
 def test_write_file():
     print(write_file(working_dir, "lorem.txt", "wait, this isn't lorem ipsum"))
