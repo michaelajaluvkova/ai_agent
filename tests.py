@@ -5,8 +5,10 @@ from functions.write_file import write_file
 from functions.run_python_file import run_python_file
 
 working_dir = "calculator"
-
 def main():
+    pass
+
+def test_run_python_file():
     print(run_python_file(working_dir, "main.py"))
     print(run_python_file(working_dir, "tests.py"))
     print(run_python_file(working_dir, "../main.py"))
