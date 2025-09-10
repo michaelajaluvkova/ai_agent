@@ -1,10 +1,17 @@
 from functions.get_files_info import *
 from functions.get_file_content import *
+from functions.write_file import write_file
+
 
 working_dir = "calculator"
-
 def main():
     pass
+
+def test_write_file():
+    print(write_file(working_dir, "lorem.txt", "wait, this isn't lorem ipsum"))
+    print(write_file(working_dir, "pkg/morelorem.txt", "lorem ipsum dolor sit amet"))
+    print(write_file(working_dir, "/tmp/temp.txt", "this should not be allowed"))
+    print(write_file(working_dir, "pkg2/temp.txt", "this should be allowed"))
 
 def test_get_content():
     #print(get_file_content(working_dir, "lorem.txt"))
