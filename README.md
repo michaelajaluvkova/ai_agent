@@ -50,5 +50,5 @@ The agent prints or returns the final result in natural language.
 
 ## RUN & PREREQUISITIES
 
-1. python3 -m main " User query " 
+1. via terminal python3 -m main " User query " 
 2. .env file containing GEMINI_API_KEY and git_token
