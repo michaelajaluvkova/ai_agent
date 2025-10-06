@@ -25,8 +25,10 @@ def main():
     - Read the content of a file
     - Write to a file (create or update)
     - Run a Python files with optional arguments
-    
+    When the user asks about code project - they are referring to the working directory. So, you should typically start by looking at the projects files, and figuring out how to run the project and 
+    how to run its tests. You'll always want to test the tests and the actual project to verify that the behavior is working.
     All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
+    You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
     """
 
     print("Args", sys.argv)
@@ -55,36 +57,49 @@ def main():
             schema_write_file
         ]
     )
+    config = types.GenerateContentConfig(
+        tools=[available_functions],
+        system_instruction=types.Content(
+            role="system",
+            parts=[types.Part(text=system_prompt)]))
 
-    response = client.models.generate_content(
+    max_iters = 20
+    for i in range(0, max_iters):
+
+        response = client.models.generate_content(
             model=model_name,
             contents=messages,
-        config=types.GenerateContentConfig(
-            tools=[available_functions],
-            system_instruction=types.Content(
-                role="system",
-                parts=[types.Part(text=system_prompt)]
-            )))
+            config=config)
 
-    if response is None or response.usage_metadata is None:
-        print("Response is malformed")
-        return
+        if response is None or response.usage_metadata is None:
+            print("Response is malformed")
+            return
 
 
-    if verbose_flag:
-        print(f"Users question: {prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+        if verbose_flag:
+            print(f"Users question: {prompt}")
+            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
-    if response.function_calls:
+        ### puts all of the functions models wants to call in an array
+        if response.candidates:
+            for candidate in response.candidates:
+                if candidate is None or candidate.content is None:
+                    continue
+                messages.append(candidate.content)
+
+        ### here we are going to actually call the functions in the array
+        if response.function_calls:
+            for function_call_part in response.function_calls:
+                result = call_function(function_call_part, verbose_flag)
+                messages.append(result)
+
+        if not response.function_calls:
+            # final agent text message
+            print(response.text)
+            return
+
         for function_call_part in response.function_calls:
-            result = call_function(function_call_part, verbose_flag)
-            print(result)
-    if not response.function_calls:
-        print(response.text)
-        return
-
-    for function_call_part in response.function_calls:
-        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+            print(f"Calling function: {function_call_part.name}({function_call_part.args})")
 
 main()

@@ -1,5 +1,5 @@
 import unittest
-from calculator.pkg.calculator import Calculator
+from pkg.calculator import Calculator
 
 
 class TestCalculator(unittest.TestCase):
@@ -41,6 +41,10 @@ class TestCalculator(unittest.TestCase):
     def test_not_enough_operands(self):
         with self.assertRaises(ValueError):
             self.calculator.evaluate("+ 3")
+
+    def test_order_of_operations(self):
+        result = self.calculator.evaluate("3 + 7 * 2")
+        self.assertEqual(result, 17)
 
 
 if __name__ == "__main__":
